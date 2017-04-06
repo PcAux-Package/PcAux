@@ -1,7 +1,8 @@
-### Title:    Create Principal Component Auxiliary Variables
-### Author:   Kyle M. Lang & Steven Chesnut
-### Created:  2015-SEP-17
-### Modified: 2017-MAR-23
+### Title:        Create Principal Component Auxiliary Variables
+### Author:       Kyle M. Lang
+### Contributors: Steven Chesnut
+### Created:      2015-SEP-17
+### Modified:     2017-MAR-26
 
 ### Copyright (C) 2017 Kyle M. Lang
 ###

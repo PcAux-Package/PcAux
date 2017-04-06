@@ -1,7 +1,7 @@
 ### Title:    Unit Tests for PcAux
 ### Author:   Kyle M. Lang
 ### Created:  2015-NOV-01
-### Modified: 2017-MAR-23
+### Modified: 2017-MAR-26
 
 ### Copyright (C) 2017 Kyle M. Lang
 ###
@@ -339,6 +339,26 @@ pcAuxData <- prepData(rawData    = testData,
                       )
 frozenPcAuxData4 <- pcAuxData$copy()
 
+## Test:   Suppress all printed output
+## Result: Successful execution
+pcAuxData <- prepData(rawData    = testData,
+                      moderators = c("y4", "x2"),
+                      nomVars    = c("nom1", "nom2"),
+                      ordVars    = c("ord1", "ord2"),
+                      idVars     = c("id1", "id2"),
+                      groupVars  = c("nom1", "nom2", "ord1"),
+                      verbose    = 0)
+
+## Test:   Suppress all printed output 2
+## Result: Successful execution
+pcAuxData <- prepData(rawData    = testData,
+                      moderators = c("y4", "x2"),
+                      nomVars    = c("nom1", "nom2"),
+                      ordVars    = c("ord1", "ord2"),
+                      idVars     = c("id1", "id2"),
+                      groupVars  = c("nom1", "nom2", "ord1"),
+                      verbose    = 1)
+
 
 ##### PCAUX CREATION TESTING #####
 
@@ -614,6 +634,23 @@ pcAuxOut <- createPcAux(pcAuxData    = tmp,
                         nComps       = c(5, 5)
                         )
 frozenPcAuxOut11 <- pcAuxOut$copy()
+
+## Test:   Suppress all printed output
+## Result: Successful execution
+tmp      <- frozenPcAuxData1$copy()
+pcAuxOut <- createPcAux(pcAuxData    = tmp,
+                        interactType = 3,
+                        nComps       = c(5, 5),
+                        verbose      = 0)
+
+
+## Test:   Suppress printed output from mice()
+## Result: Successful execution
+tmp      <- frozenPcAuxData1$copy()
+pcAuxOut <- createPcAux(pcAuxData    = tmp,
+                        interactType = 3,
+                        nComps       = c(5, 5),
+                        verbose      = 1)
 
 
 ##### MI TESTING #####
@@ -894,3 +931,21 @@ miOut <- miWithPcAux(rawData    = testData,
                      nImps      = 5L,
                      nProcess   = 4,
                      compFormat = "repeated")
+
+## Test:   Suppress all printed output
+## Result: Successful execution
+tmp   <- frozenPcAuxOut1$copy()
+miOut <- miWithPcAux(rawData    = testData,
+                     pcAuxData  = tmp,
+                     dropVars   = "z2",
+                     nImps      = 5L,
+                     verbose    = 0)
+
+## Test:   Suppress printed output from mice()
+## Result: Successful execution
+tmp   <- frozenPcAuxOut1$copy()
+miOut <- miWithPcAux(rawData    = testData,
+                     pcAuxData  = tmp,
+                     dropVars   = "z2",
+                     nImps      = 5L,
+                     verbose    = 1)

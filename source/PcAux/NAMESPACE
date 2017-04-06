@@ -7,12 +7,28 @@ export(prepData,
        getImpData,
        pcAuxW)
 
-import(methods,
-       mice,
-       vcd,
-       ICC,
-       rlecuyer,
-       parallel)
+import(methods)
 
-importFrom("stats", ".lm.fit", "cor", "cov", "prcomp", "sd", "runif", "na.omit")
-importFrom("utils", "combn")
+importFrom("mice",
+           "mice",
+           "complete",
+           "quickpred")
+importFrom("parallel",
+           "makeCluster",
+           "clusterEvalQ",
+           "parLapply",
+           "parApply",
+           "stopCluster")
+importFrom("stats",
+           ".lm.fit",
+           "cor",
+           "cov",
+           "prcomp",
+           "sd",
+           "runif",
+           "na.omit")
+importFrom("rlecuyer",
+           ".lec.SetPackageSeed",
+           ".lec.GetStreams",
+           ".lec.CreateStream",
+           ".lec.CurrentStream")

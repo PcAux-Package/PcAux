@@ -1,9 +1,10 @@
-### Title:    Conduct Multiple Imputation with PC Auxiliaries
-### Author:   Kyle M. Lang & Steven Chesnut
-### Created:  2015-SEP-17
-### Modified: 2017-MAR-23
-### Purpose:  Use the principal component auxiliaries produced by createPcAux()
-###           to conduct MI.
+### Title:        Conduct Multiple Imputation with PC Auxiliaries
+### Author:       Kyle M. Lang
+### Contributors: Steven Chesnut
+### Created:      2015-SEP-17
+### Modified:     2017-MAR-27
+### Purpose:      Use the principal component auxiliaries produced by
+###               createPcAux() to conduct MI.
 
 ### Copyright (C) 2017 Kyle M. Lang
 ###
@@ -72,11 +73,12 @@ miWithPcAux <- function(rawData,
     if(!simMode) checkInputs(parent = "miWithPcAux")
     
     ## Combine the principal component auxiliaries with the raw data:
-    mergeOut <-
-        mergePcAux(pcAuxData = pcAuxData, rawData = rawData, nComps = nComps)
+    mergePcAux(pcAuxData = pcAuxData,
+               rawData   = rawData,
+               nComps    = nComps,
+               intern    = TRUE)
     
     ## Populate new fields in the extant PcAuxData object:
-    pcAuxData$data       <- mergeOut
     pcAuxData$nImps      <- as.integer(nImps)
     pcAuxData$simMode    <- simMode
     pcAuxData$compFormat <- compFormat
@@ -102,23 +104,29 @@ miWithPcAux <- function(rawData,
     if(any(singleMissNom))
         pcAuxData$fillNomCell(colnames(pcAuxData$data[singleMissNom]))
     
-    if(verbose) cat("\nMultiply imputing missing data...\n")
+    if(verbose > 1) cat("\nMultiply imputing missing data...\n")
     
     ## Construct a predictor matrix for mice():
-    if(verbose) cat("--Constructing predictor matrix...")
-    predMat <-
-        makePredMatrix(pcAuxData$data, pcAuxData$nComps[1], pcAuxData$nComps[2])
-    if(verbose) cat("done.\n")
+    if(verbose > 1) cat("--Constructing predictor matrix...")
+    nLin    <- length(grep("^linPC\\d", colnames(pcAuxData$data)))
+    nNonLin <- ifelse(nComps[2] == 0,
+                      0,
+                      length(grep("^nonLinPC\\d", colnames(pcAuxData$data)))
+                      )
+    predMat <- makePredMatrix(mergedData = pcAuxData$data,
+                              nLinear    = nLin,
+                              nNonLinear = nNonLin)
+    if(verbose > 1) cat("done.\n")
     
     ## Specify a vector of elementary imputation methods:
-    if(verbose) cat("--Creating method vector...")
+    if(verbose > 1) cat("--Creating method vector...")
     pcAuxData$createMethVec()
-    if(verbose) cat("done.\n")
+    if(verbose > 1) cat("done.\n")
     
-    if(forcePmm & verbose) cat("PMM forced by user.\n")
+    if(forcePmm & verbose > 1) cat("PMM forced by user.\n")
     
     ## Multiply impute the missing data in 'mergedData':
-    if(verbose) cat("--Imputing missing values...\n")
+    if(verbose > 1) cat("--Imputing missing values...\n")
     
     if(nProcess == 1) {# Impute in serial
         pcAuxData$miceObject <- try(
@@ -127,7 +135,7 @@ miWithPcAux <- function(rawData,
                  maxit           = 1L,
                  predictorMatrix = predMat,
                  method          = pcAuxData$methVec,
-                 printFlag       = verbose,
+                 printFlag       = verbose == 2,
                  ridge           = pcAuxData$miceRidge,
                  seed            = pcAuxData$seed,
                  nnet.MaxNWts    = pcAuxData$maxNetWts),
@@ -154,11 +162,11 @@ miWithPcAux <- function(rawData,
         
         stopCluster(myCluster)
         
-        if(pcAuxData$compFormat != "list") pcAuxData$transformMiData()
+        pcAuxData$transformMiData()
     }
     
-    if(verbose) cat("\n--done.\n")
-    if(verbose) cat("Complete.\n")
+    if(verbose > 1) cat("\n--done.\n")
+    if(verbose > 1) cat("Complete.\n")
     
     pcAuxData
 }# END miWithPcAux()

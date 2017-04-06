@@ -2,7 +2,7 @@
 ### Author:       Kyle M. Lang
 ### Contributors: Byung Jung, Vibhuti Gupta
 ### Created:      2015-OCT-30
-### Modified:     2017-MAR-23
+### Modified:     2017-MAR-27
 ### Note:         PcAuxData is the metadata class for the PcAux package.
 
 ### Copyright (C) 2017 Kyle M. Lang
@@ -726,29 +726,42 @@ PcAuxData$methods(
         "Complete the multiply imputed data sets"
         specialComp <- compFormat %in% c("long", "broad", "repeated")
         if(specialComp) {
-            miDatasets <<- mice::complete(miceObject, compFormat)
+            miDatasets <<- complete(miceObject, compFormat)
+            pcCols <-
+                grep("^linPC\\d|^nonLinPC\\d", colnames(miDatasets))
+            miDatasets <<- miDatasets[ , -pcCols]
         } else {
             miDatasets <<- list()
-            for(m in 1 : nImps)
-                miDatasets[[m]] <<- mice::complete(miceObject, m)
+            for(m in 1 : nImps) {
+                miDatasets[[m]] <<- complete(miceObject, m)
+                if(m == 1) pcCols <- grep("^linPC\\d|^nonLinPC\\d",
+                                          colnames(miDatasets[[m]])
+                                          )
+                miDatasets[[m]] <<- miDatasets[[m]][ , -pcCols]
+            }
         }
     },
-
+    
     transformMiData = function()                                                {
-        "Reformat list-formatted imputed data sets"
+        "Format imputed data sets after parallelMice()"
+        ## Remove the PcAux:
+        pcCols <- grep("^linPC\\d|^nonLinPC\\d", colnames(miDatasets[[1]]))
+        for(m in 1 : nImps) miDatasets[[m]] <<- miDatasets[[m]][ , -pcCols]
+
+        ## Impose the requested completion format:
         if(compFormat == "long") {
             .imp <- rep(c(1 : nImps), each = nrow(data))
             .id  <- rep(c(1 : nrow(data)), nImps       )
             miDatasets <<-
                 data.frame(.imp, .id, do.call(rbind.data.frame, miDatasets))
-        } else {
+        } else if(compFormat %in% c("broad", "repeated")) {
             for(m in 1 : nImps) {
                 colnames(miDatasets[[m]]) <<-
                     paste0(colnames(miDatasets[[m]]), ".", m)
             }
-
+            
             miDatasets <<- do.call(cbind.data.frame, miDatasets)
-
+            
             if(compFormat == "repeated") {
                 tmp        <-  rep       (c(1 : ncol(data)), nImps)
                 miDatasets <<- miDatasets[ , order(tmp)           ]
@@ -883,12 +896,23 @@ PcAuxData$methods(
         "Dummy code nominal factors"
         if(action == 0) {# Create dummy codes
             noms <- colnames(data)[colnames(data) %in% nomVars]
+            
             ## Expand factors into dummy codes:
             form <- as.formula(
                 paste0("~", paste0(noms, collapse = " + "))
             )
+            
+            ## Make sure missing values are retained in dummy codes:
+            oldOpt <- options(na.action = "na.pass")
+            
+            ## Create/store dummy codes:
             dumNoms <<- data.frame(model.matrix(form, data = data)[ , -1])
-            facNoms <<- data.frame(data[ , noms])
+            
+            ## Reset the na.action option:
+            options(na.action = oldOpt$na.action)
+
+            ## Store factor representations:
+            facNoms           <<- data.frame(data[ , noms])
             colnames(facNoms) <<- noms
             
             ## Remove dummy codes for empty factor levels:

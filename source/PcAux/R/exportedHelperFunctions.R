@@ -1,7 +1,7 @@
 ### Title:    Exported PcAux Helper Functions
 ### Author:   Kyle M. Lang
 ### Created:  2015-OCT-29
-### Modified: 2017-MAR-23
+### Modified: 2017-MAR-26
 
 ### Copyright (C) 2017 Kyle M. Lang
 ###
@@ -60,8 +60,9 @@ copy of the Program in return for a fee.
 
 ### Merge the Principal Component Auxiliaries with the raw data from which they
 ### were created:
-mergePcAux <- function(pcAuxData, rawData, nComps = NULL, verbose = TRUE)
+mergePcAux <- function(pcAuxData, rawData, nComps = NULL, verbose = TRUE, ...)
 {
+    args   <- list(...)
     idVars <- pcAuxData$idVars
     varExp <- c(NA, NA)
     
@@ -188,21 +189,31 @@ mergePcAux <- function(pcAuxData, rawData, nComps = NULL, verbose = TRUE)
     }
     
     ## Merge the PcAux scores onto the raw data:
+    linPcNames    <- paste0("linPC",    c(1 : nComps[1]))
+    nonLinPcNames <- paste0("nonLinPC", c(1 : nComps[2]))
     if(badId) {
         if(pcAuxData$intMeth > 1)
             outData <-
-                data.frame(rawData, pcAuxData$pcAux$lin, pcAuxData$pcAux$nonLin)
+                data.frame(rawData,
+                           pcAuxData$pcAux$lin[ , linPcNames],
+                           pcAuxData$pcAux$nonLin[ , nonLinPcNames]
+                           )
         else
-            outData <- data.frame(rawData, pcAuxData$pcAux$lin)
+            outData <- data.frame(rawData, pcAuxData$pcAux$lin[ , linPcNames])
     } else {
+        linPcNames    <- c(useId, linPcNames)
+        nonLinPcNames <- c(useId, nonLinPcNames)
+        
         if(pcAuxData$intMeth > 1)
-            tmp <- merge(pcAuxData$pcAux$lin, pcAuxData$pcAux$nonLin)
+            tmp <- merge(pcAuxData$pcAux$lin[ , linPcNames],
+                         pcAuxData$pcAux$nonLin[ , nonLinPcNames]
+                         )
         else
-            tmp <- pcAuxData$pcAux$lin
-        outData <-
-            merge(rawData, tmp[ , setdiff(colnames(tmp), extraIds)], by = useId)
+            tmp <- pcAuxData$pcAux$lin[ , linPcNames]
+        outData <- merge(rawData, tmp, by = useId)
     }
-    outData
+    if(!is.null(args$intern) && args$intern) pcAuxData$data <- outData
+    else                                     outData
 }# END mergePcAux()
 
 

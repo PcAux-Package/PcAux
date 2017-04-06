@@ -282,8 +282,8 @@ findCollin <- function(map) {
     
     ## Get all unique variable pairings:
     varPairs <- NULL
-    varPairs <-
-        data.frame(t(combn(colnames(map$data), 2)), stringsAsFactors = FALSE)
+    varPairs <- data.frame(t(utils::combn(colnames(map$data), 2)),
+                           stringsAsFactors = FALSE)
     ##If not using any parallel process
     if(map$nProcess == 1)
         linAssocFrame <- data.frame(varPairs,

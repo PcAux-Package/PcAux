@@ -10,7 +10,7 @@
   constructed.
 }
 \usage{
-mergePcAux(pcAuxData, rawData, nComps = NULL, verbose = TRUE)
+mergePcAux(pcAuxData, rawData, nComps = NULL, verbose = TRUE, ...)
 }
 \arguments{
   \item{pcAuxData}{
@@ -30,7 +30,11 @@ mergePcAux(pcAuxData, rawData, nComps = NULL, verbose = TRUE)
   \item{verbose}{
     A logical flag indicating whether verbose output should be printed
     to stdout. Defaults to \code{verbose = TRUE}.
-    }  
+  }
+  \item{...}{
+    Only used when \code{mergePcAux} is called from within other
+    \pkg{PcAux} functions.
+  }
 }
 \details{
   This function will attempt to use the ID variables defined in PcAux's
