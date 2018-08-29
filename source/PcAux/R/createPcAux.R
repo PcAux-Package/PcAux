@@ -1,23 +1,27 @@
 ### Title:        Create Principal Component Auxiliary Variables
 ### Author:       Kyle M. Lang
-### Contributors: Steven Chesnut, Pavel Panko
+### Contributors: Steven Chesnut, Pavel Panko, Luke Waggenspack
 ### Created:      2015-SEP-17
-### Modified:     2017-NOV-16
+### Modified:     2018-MAY-25
 
-### Copyright (C) 2017 Kyle M. Lang
-###
-### This program is free software: you can redistribute it and/or modify
-### it under the terms of the GNU General Public License as published by
-### the Free Software Foundation, either version 3 of the License, or
-### (at your option) any later version.
-###
-### This program is distributed in the hope that it will be useful,
-### but WITHOUT ANY WARRANTY; without even the implied warranty of
-### MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-### GNU General Public License for more details.
-###
-### You should have received a copy of the GNU General Public License
-### along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##--------------------- COPYRIGHT & LICENSING INFORMATION --------------------##
+##  Copyright (C) 2018 Kyle M. Lang <k.m.lang@uvt.nl>                         ##
+##                                                                            ##
+##  This file is part of PcAux.                                               ##
+##                                                                            ##
+##  This program is free software: you can redistribute it and/or modify it   ##
+##  under the terms of the GNU General Public License as published by the     ##
+##  Free Software Foundation, either version 3 of the License, or (at you     ##
+##  option) any later version.                                                ##
+##                                                                            ##
+##  This program is distributed in the hope that it will be useful, but       ##
+##  WITHOUT ANY WARRANTY; without even the implied warranty of                ##
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General  ##
+##  Public License for more details.                                          ##
+##                                                                            ##
+##  You should have received a copy of the GNU General Public License along   ##
+##  with this program. If not, see <http://www.gnu.org/licenses/>.            ##
+##----------------------------------------------------------------------------##
 
 
 createPcAux <- function(pcAuxData,
@@ -65,7 +69,8 @@ createPcAux <- function(pcAuxData,
     check <- missCheck(pcAuxData$moderators)
     if(check) {
         pcAuxData$moderators <- colnames(pcAuxData$data)
-        if(pcAuxData$intMeth < 3) warnFun("noMods")
+        if(pcAuxData$intMeth ==1 | pcAuxData$intMeth == 2)
+            warnFun("noMods", map = pcAuxData)
     }
 
     pcAuxData$setTime("modExt")
@@ -124,7 +129,6 @@ createPcAux <- function(pcAuxData,
    
         pcAuxData$setTime("doSingle")
         if(pcAuxData$checkStatus == "all") pcAuxData$setStatus("doSingle")
-
     }
     
     ## Extract the linear principal component scores:
@@ -147,7 +151,6 @@ createPcAux <- function(pcAuxData,
 
         pcAuxData$setTime("doNLinear")
         if(pcAuxData$checkStatus == "all") pcAuxData$setStatus("doNLinear")
-        
     }
 
     ## Remove unnecessary representation of nominal variables:

@@ -2,61 +2,42 @@
 ### Author:       Kyle M. Lang
 ### Contributors: Pavel Panko, Vibhuti Gupta
 ### Created:      2015-OCT-29
-### Modified:     2017-SEP-25
+### Modified:     2018-MAY-25
 
-### Copyright (C) 2017 Kyle M. Lang
-###
-### This program is free software: you can redistribute it and/or modify
-### it under the terms of the GNU General Public License as published by
-### the Free Software Foundation, either version 3 of the License, or
-### (at your option) any later version.
-###
-### This program is distributed in the hope that it will be useful,
-### but WITHOUT ANY WARRANTY; without even the implied warranty of
-### MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-### GNU General Public License for more details.
-###
-### You should have received a copy of the GNU General Public License
-### along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##--------------------- COPYRIGHT & LICENSING INFORMATION --------------------##
+##  Copyright (C) 2018 Kyle M. Lang <k.m.lang@uvt.nl>                         ##
+##                                                                            ##
+##  This file is part of PcAux.                                               ##
+##                                                                            ##
+##  This program is free software: you can redistribute it and/or modify it   ##
+##  under the terms of the GNU General Public License as published by the     ##
+##  Free Software Foundation, either version 3 of the License, or (at you     ##
+##  option) any later version.                                                ##
+##                                                                            ##
+##  This program is distributed in the hope that it will be useful, but       ##
+##  WITHOUT ANY WARRANTY; without even the implied warranty of                ##
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General  ##
+##  Public License for more details.                                          ##
+##                                                                            ##
+##  You should have received a copy of the GNU General Public License along   ##
+##  with this program. If not, see <http://www.gnu.org/licenses/>.            ##
+##----------------------------------------------------------------------------##
 
 
-### Print the (lack of) warranty information:
+## Print the (lack of) warranty information:
 pcAuxW <- function() {
-    cat('
-  15. Disclaimer of Warranty.
+    lic <- readLines(system.file("LICENSE", package = "PcAux"))
+    
+    start <- grep("15. Disclaimer of Warranty", lic)
+    end   <- grep("END OF TERMS AND CONDITIONS", lic) - 1
+    
+    writeLines(lic[start : end])
+}
 
-  THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
-APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
-HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
-OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
-IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
-ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
 
-  16. Limitation of Liability.
-
-  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
-THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
-GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE
-USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF
-DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD
-PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),
-EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGES.
-
-  17. Interpretation of Sections 15 and 16.
-
-  If the disclaimer of warranty and limitation of liability provided
-above cannot be given local legal effect according to their terms,
-reviewing courts shall apply local law that most closely approximates
-an absolute waiver of all civil liability in connection with the
-Program, unless a warranty or assumption of liability accompanies a
-copy of the Program in return for a fee.
-')
-}# END pcAuxW()
-
+## Print license:
+pcAuxL <- function()
+    writeLines(readLines(system.file("LICENSE", package = "PcAux")))
 
 
 ### Merge the Principal Component Auxiliaries with the raw data from which they
@@ -222,8 +203,6 @@ mergePcAux <- function(pcAuxData, rawData, nComps = NULL, verbose = TRUE, ...)
 }# END mergePcAux()
 
 
-
-
 ### Make a predictor matrix suitable for use by mice() that designated subset of
 ### the principle component auxiliaries produced by pcAux() as the imputation
 ### model predictors:
@@ -264,7 +243,6 @@ makePredMatrix <- function(mergedData,
 }# END makePredMatrix()
 
 
-
 ## Wrapper function to give S3/S4-like access to fields:
 inspect <- function(object, what) object$field(what)
 
@@ -281,7 +259,7 @@ calcTime <- function(pcAuxData, what) {
     nPoints                      <- length(eachStep)
     eachStep[nPoints + 1]        <- as.vector(time[length(time)] - time["start"])
     names(eachStep)[nPoints + 1] <- "overall"
-
+    
     usrVars <- lapply(c("End", "usr"), function(x) grep(x, names(eachStep)))
     
     if(length(unlist(usrVars)) > 1) {
@@ -297,7 +275,14 @@ calcTime <- function(pcAuxData, what) {
 
 ## Write machine status to a text files 
 writeStatus <- function(pcAuxData, outName, what) {
-    fileName <- file(outName)
-    writeLines(capture.output(pcAuxData$status[[what]]), fileName)
-    close(fileName)
+    capture.output(pcAuxData$status[[what]], file = outName)
+    paste("Wrote status to", outName)
+}
+
+
+getLoggedEvents <- function(pcAuxData) {
+    if(!nrow(pcAuxData$loggedEvents))
+        return("No logged events")
+    else
+        return(pcAuxData$loggedEvents)
 }

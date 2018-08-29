@@ -2,22 +2,26 @@
 ### Author:       Kyle M. Lang & Stephen Chesnut
 ### Contributors: Byungkwan Jung, Pavel Panko
 ### Created:      2015-JUL-27
-### Modified:     2017-NOV-15
+### Modified:     2018-MAY-25
 
-### Copyright (C) 2017 Kyle M. Lang
-###
-### This program is free software: you can redistribute it and/or modify
-### it under the terms of the GNU General Public License as published by
-### the Free Software Foundation, either version 3 of the License, or
-### (at your option) any later version.
-###
-### This program is distributed in the hope that it will be useful,
-### but WITHOUT ANY WARRANTY; without even the implied warranty of
-### MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-### GNU General Public License for more details.
-###
-### You should have received a copy of the GNU General Public License
-### along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##--------------------- COPYRIGHT & LICENSING INFORMATION --------------------##
+##  Copyright (C) 2018 Kyle M. Lang <k.m.lang@uvt.nl>                         ##
+##                                                                            ##
+##  This file is part of PcAux.                                               ##
+##                                                                            ##
+##  This program is free software: you can redistribute it and/or modify it   ##
+##  under the terms of the GNU General Public License as published by the     ##
+##  Free Software Foundation, either version 3 of the License, or (at you     ##
+##  option) any later version.                                                ##
+##                                                                            ##
+##  This program is distributed in the hope that it will be useful, but       ##
+##  WITHOUT ANY WARRANTY; without even the implied warranty of                ##
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General  ##
+##  Public License for more details.                                          ##
+##                                                                            ##
+##  You should have received a copy of the GNU General Public License along   ##
+##  with this program. If not, see <http://www.gnu.org/licenses/>.            ##
+##----------------------------------------------------------------------------##
 
 
 checkInputs <- function() {
@@ -384,11 +388,14 @@ doSingleImputation <- function(map) {
             silent = TRUE)
         if(map$verbose > 0) cat("done.\n")
         
-        if(class(map$data) != "try-error") # mice() didn't crash
+        if(class(map$data) != "try-error") { # mice() didn't crash
+            ## Record any logged events 
+            map$loggedEvents <- map$data$loggedEvents
             ## Fill missing values with the imputations
-            map$data <- complete(map$data)
-        else
+            map$data         <- complete(map$data)
+        } else {
             errFun("miceCrash", map = map)
+        }
         
         ## Check for any remaining missing data:
         ## NOTE: map$respCounts now contains counts of missing data
@@ -593,7 +600,7 @@ doPCA <- function(map) {
         if(!missCheck(map$nomVars)) map$castNomVars() 
 
         ## Cast any remaining factors to numeric formats:
-        check <- unlist(lapply(map$data, is.factor))
+        check <- sapply(map$data, is.factor)
         if(sum(check) > 1)
             map$data[ , check] <- data.frame(lapply(map$data[ , check], f2n))
         if(sum(check) == 1)
@@ -650,17 +657,17 @@ doPCA <- function(map) {
     if(map$pcaMemLev == 0) {
         ## Higher numerical accuracy, but more memory usage
         pcaOut <- prcomp(map$data, scale = TRUE, retx  = TRUE)
-                
-        ## Save the components' variances and compute variance explained:
-        map$rSquared[[linVal]] <- pcaOut$sdev
-        map$calcRSquared()
-
+        
+        ## Compute and store the cumulative proportion of variance explained by
+        ## the component scores:
+        map$rSquared[[linVal]] <- cumsum(pcaOut$sdev^2) / sum(pcaOut$sdev^2)
+        
         ## Set component counts when some are defined in terms of variance
         ## explained:
         if(parseCheck) map$setNComps(type = pcType)
                 
         ## Extract the principal component scores:
-        if(is.null(map$idCols))
+        if(length(map$idCols) == 0)
             map$pcAux[[linVal]] <- pcaOut$x[ , 1 : map$nComps[pcType]]
         else
             map$pcAux[[linVal]] <-

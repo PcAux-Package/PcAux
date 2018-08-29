@@ -7,6 +7,33 @@ The format is based on [Keep a Changelog][kacl], and this project adheres to
 NOTE: Changes prior to version 0.0.0.9006 were documented retrospectively and 
 should, therefore, be viewed with an appropriate degree of skepticism.
 
+## 0.0.0.9013 - 2018-05-25 - ACTIVE
+
+### Fixed
+- Bug with calculation of the cumulative proportions of variance explained by 
+  the component scores 
+- Bug causing inappropriate warnings when not specifying any moderators (Issue 
+  #20)
+- Bug causing issues when computing interaction terms with certain arrangements 
+  of few moderators (Issue #18)
+- Bug causing crashes when no ID variables are specified (Issue #21)
+  
+### Changed
+- Resolved final known issues with the timing utilities contributed by @ppanko
+- Exported the `writeStatus` function
+- Improved the way interaction terms are computed to be more robust to 
+  unanticipated use-cases
+- Improved implementation of the `pcAuxW` function
+- Cleaned up the source code for the `PcAuxData` class definition
+
+### Added
+- A `pcAuxL` function to print licensing information
+- Included @Lwaggens (Luke Waggenspack) as a contributor, particularly for help
+  with locating and correcting the first bug noted in the above *fixed* 
+  subsection
+- A `getLoggedEvents` function used to retrieve events produced by `mice`
+  during the initial imputation contributed by @ppanko 
+  
 ## 0.0.0.9012 - 2017-11-16
 
 ### Fixed
@@ -19,7 +46,7 @@ should, therefore, be viewed with an appropriate degree of skepticism.
     - Polynomials are now constructed from ordinal variables as well as 
 	  continuous variables
 	- It makes as much sense to construct a polynomial from an ordinal variable 
-	  as it does to cast it as numeric and use it in an iteraction (which we've 
+	  as it does to cast it as numeric and use it in an interaction (which we've 
 	  always done)
 	- Accordingly, asking for polynomials with only ordinal variables will no 
 	  longer trigger an error

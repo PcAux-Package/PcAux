@@ -179,6 +179,11 @@ miWithPcAux(rawData,
       function to screen the PcAux candidates when the
       \code{useQuickPred} option is specified.
     }
+    \item{checkStatus: }{
+      The steps at which to record system and OS status. Can take
+      values: \code{"none"}, \code{"start"}, or \code{"all"}. Defaults
+      to \code{"none"}.
+    }
   }
 }
 \value{

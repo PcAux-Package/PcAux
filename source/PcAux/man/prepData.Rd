@@ -142,6 +142,11 @@ prepData(rawData,
       The number of categories into which continuous grouping variables
       will be split, if applicable. Defaults to \code{nGVarCats = 3L}.
     }
+    \item{checkStatus: }{
+      The steps at which to record system and OS status. Can take
+      values: \code{"none"}, \code{"start"} or \code{"all"}. Defaults to
+      \code{"none"}.
+    }
   }
 }
 \value{

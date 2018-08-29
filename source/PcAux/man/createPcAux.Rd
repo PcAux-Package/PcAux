@@ -113,7 +113,7 @@ createPcAux(pcAuxData,
     0} and \code{interactType == 1} will produce component scores only
     in the \code{pcAux$lin} field. 
   
-  The \code{control} argument is a key-paired list with the following
+    The \code{control} argument is a key-paired list with the following
   possible entries:
   \itemize{
     \item{miceIters: }{
@@ -173,6 +173,11 @@ createPcAux(pcAuxData,
       less numerical accuracy than the prcomp() approach. Leaving this
       option at the default value should be sufficient for most
       applications.
+    }
+    \item{checkStatus: }{
+      The steps at which to record system and OS status. Can take
+      values: \code{"none"}, \code{"start"}, or \code{"all"}. Defaults
+      to \code{"none"}. 
     }
   }
 }
