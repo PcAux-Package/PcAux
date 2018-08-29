@@ -2,7 +2,7 @@
 ### Author:       Kyle M. Lang
 ### Contributors: Pavel Panko, Vibhuti Gupta
 ### Created:      2015-OCT-29
-### Modified:     2018-MAY-25
+### Modified:     2018-AUG-17
 
 ##--------------------- COPYRIGHT & LICENSING INFORMATION --------------------##
 ##  Copyright (C) 2018 Kyle M. Lang <k.m.lang@uvt.nl>                         ##

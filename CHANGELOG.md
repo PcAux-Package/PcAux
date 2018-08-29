@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog][kacl], and this project adheres to
 NOTE: Changes prior to version 0.0.0.9006 were documented retrospectively and 
 should, therefore, be viewed with an appropriate degree of skepticism.
 
-## 0.0.0.9013 - 2018-05-25 - ACTIVE
+## 0.0.0.9013 - 2018-08-29 - ACTIVE
 
 ### Fixed
 - Bug with calculation of the cumulative proportions of variance explained by 

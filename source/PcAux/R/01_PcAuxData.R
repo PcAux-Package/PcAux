@@ -2,7 +2,7 @@
 ### Author:       Kyle M. Lang
 ### Contributors: Byungkwan Jung, Vibhuti Gupta, Pavel Panko
 ### Created:      2015-OCT-30
-### Modified:     2018-MAY-25
+### Modified:     2018-AUG-17
 ### Note:         PcAuxData is the metadata class for the PcAux package.
 
 ##--------------------- COPYRIGHT & LICENSING INFORMATION --------------------##
