@@ -34,6 +34,7 @@ createPcAux <- function(pcAuxData,
                         doImputation = TRUE,
                         castData     = !doImputation,
                         control,
+                        micemethods = c("norm", "polr", "polyreg", "logreg"),
                         ...)
 {
     pcAuxData$setCall(match.call(), parent = "createPcAux")
