@@ -122,7 +122,7 @@ createPcAux <- function(pcAuxData,
     ## Execute the initial, single imputation:
     if(doImputation) {
 
-        doSingleImputation(map = pcAuxData, methods = methods)
+        doSingleImputation(map = pcAuxData, micemethods = micemethods)
 
         ## Use imputed data to update nominal variable representations:
         if(length(pcAuxData$nomVars) > 0) pcAuxData$codeNomVars()
