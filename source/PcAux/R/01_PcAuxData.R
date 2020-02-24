@@ -705,7 +705,7 @@ PcAuxData$
                 removeVars(x = unique(varsToRemove), reason = "collinear")
         },
         
-        createMethVec = function(initialImp = FALSE, methods = methods)
+        createMethVec = function(initialImp = FALSE, micemethods = micemethods)
         {
             "Populate a vector of elementary imputation methods"
             cn0 <- setdiff(colnames(data), c(intVars, colnames(poly)))
@@ -741,10 +741,10 @@ PcAuxData$
                     sapply(typeVec[colnames(data)],
                            FUN = function(x) {
                                switch(x,
-                                      continuous = default.method[1],
-                                      ordinal    = default.method[2],
-                                      nominal    = default.method[3],
-                                      binary     = default.method[4],
+                                      continuous = micemethods[1],
+                                      ordinal    = micemethods[2],
+                                      nominal    = micemethods[3],
+                                      binary     = micemethods[4],
                                       "")
                            }
                            )
