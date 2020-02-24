@@ -51,7 +51,7 @@ createPcAux <- function(pcAuxData,
     
     ## Add elements to an extant instance of the PcAuxData class:
     pcAuxData$nComps   <- nComps
-    pcAuxData$forcePmm <- TRUE # Don't give imputation options other than PMM
+    pcAuxData$forcePmm <- FALSE # Don't give imputation options other than PMM
     pcAuxData$intMeth  <- as.integer(interactType)
     pcAuxData$maxPower <- as.integer(maxPolyPow)
     pcAuxData$simMode  <- simMode
