@@ -356,7 +356,7 @@ findCollin <- function(map) {
 
 
 ## Do the initial single imputation:
-doSingleImputation <- function(map) {
+doSingleImputation <- function(map, micemethods = micemethods) {
     if(map$verbose > 0) cat("\nDoing initial, single imputation...\n")
     
     ## Construct a design matrix of predictors:
@@ -370,7 +370,7 @@ doSingleImputation <- function(map) {
         
         ## Specify a vector of elementary imputation methods:
         if(map$verbose > 0) cat("--Creating method vector...")
-        map$createMethVec(initialImp = TRUE)
+        map$createMethVec(initialImp = TRUE, micemethods = micemethods)
         if(map$verbose > 0) cat("done.\n")
         
         ## Initially fill-in the data with a single imputation:
