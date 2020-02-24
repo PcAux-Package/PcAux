@@ -705,7 +705,7 @@ PcAuxData$
                 removeVars(x = unique(varsToRemove), reason = "collinear")
         },
         
-        createMethVec = function(initialImp = FALSE, default.method = c("norm", "polr", "polyreg", "logreg"))
+        createMethVec = function(initialImp = FALSE, methods = methods)
         {
             "Populate a vector of elementary imputation methods"
             cn0 <- setdiff(colnames(data), c(intVars, colnames(poly)))
