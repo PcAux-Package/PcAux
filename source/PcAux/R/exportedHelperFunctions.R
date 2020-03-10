@@ -242,6 +242,80 @@ makePredMatrix <- function(mergedData,
     predMat
 }# END makePredMatrix()
 
+## New Predictor Matrix Method to ensure no PCs below a certain threshhold are used
+## Also protects against nPredictors > nObservations iteratively
+pcQuickPred <- function(data,
+                        mincor = .01,
+                        nLinear = nLin,
+                        nNonLinear = nNonLin ) {
+
+  if(nNonLinear > 0)
+    PCs    <- c(paste0("linPC", c(1 : nLinear)),
+                     paste0("nonLinPC", c(1 : nNonLinear))
+    )
+  else 
+    PCs    <- paste0("linPC", c(1 : nLinear))
+  
+  
+  items <- setdiff(names(data), PCs)
+  
+  nvar <- ncol(data)
+  pcPredictorMatrix <- matrix(0, 
+                              nrow = nvar, 
+                              ncol = nvar, 
+                              dimnames = list(names(data),names(data)))
+  
+  # get data and missing pattern as matricies                                                                                                                                                names(data)))
+  dataMat <- data.matrix(data)
+  rMat <- !is.na(dataMat)
+  
+  # get y-corrs
+  suppressWarnings(yCor <- abs(cor(dataMat, use = "pairwise.complete.obs", 
+                                method = "pearson")))
+  yCor[is.na(yCor)] <- 0
+  
+  # get r-corrs
+  suppressWarnings(rCor <- abs(cor(x = rMat, y = dataMat, use = "pairwise.complete.obs", 
+                                method = "pearson")))
+  rCor[is.na(rCor)] <- 0
+  
+  # get larger of yCor and rCor, but only consider r-corr when corresponding
+  # y-corr > mincor
+  corMat <- pmax(yCor, pmin(rCor, yCor>mincor))
+  
+  # select all predictors > min threshold
+  pcPredictorMatrix[corMat > mincor] <- 1
+  
+  # only allow PCs to predict - remove items
+  pcPredictorMatrix[,c(items,id)] <- 0
+  
+  # no self-prediction
+  diag(pcPredictorMatrix) <- 0
+  
+  # no predictors all PCs (because complete) nor any complete items
+  pcPredictorMatrix[colSums(!rMat) == 0, ] <- 0
+  
+  # get max predictors given observed cases
+  maxPredCounts <- colSums(rMat[,items]) -1
+  names(maxPredCounts) <- items
+  
+  # get list of decreasing PC-item correlations for each item
+  rankedCorsList <- map(items, function(c) {
+    itemCors <- corMat[c]
+    names(itemCors) <- PCs
+    itemCors <- itemCors[order(itemCors, decreasing=TRUE)] } )
+  
+  for (i in items) {
+    
+    if ( rowSums(pcPredictorMatrix[i,]) > maxPredCounts[i] ) {
+      keep <- which(itemCors[ 1:maxPredCounts[i] ] )
+      pcPredictorMatrix[ i, !keep ] <- 0
+    } # end if
+    
+  } # next i
+
+return(pcPredictorMatrix)
+} # end pcQuickPred
 
 ## Wrapper function to give S3/S4-like access to fields:
 inspect <- function(object, what) object$field(what)
