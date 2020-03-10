@@ -246,8 +246,8 @@ makePredMatrix <- function(mergedData,
 ## Also protects against nPredictors > nObservations iteratively
 pcQuickPred <- function(data,
                         mincor = .01,
-                        nLinear = nLin,
-                        nNonLinear = nNonLin ) {
+                        nLinear = NULL,
+                        nNonLinear = NULL ) {
 
   if(nNonLinear > 0)
     PCs    <- c(paste0("linPC", c(1 : nLinear)),
