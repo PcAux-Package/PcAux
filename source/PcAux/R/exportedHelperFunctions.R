@@ -287,7 +287,7 @@ pcQuickPred <- function(data,
   pcPredictorMatrix[corMat > mincor] <- 1
   
   # only allow PCs to predict - remove items
-  pcPredictorMatrix[,c(items,id)] <- 0
+  pcPredictorMatrix[, items] <- 0
   
   # no self-prediction
   diag(pcPredictorMatrix) <- 0
