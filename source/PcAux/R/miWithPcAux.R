@@ -146,7 +146,7 @@ miWithPcAux <- function(rawData,
     check <- pcAuxData$useQuickPred && length(pcAuxData$minPredCor) == 1 
     if(check) errFun("noMinCor")
     
-    predMat <- pcQuickPred(mergedData   = pcAuxData$data,
+    predMat <- pcQuickPred(data   = pcAuxData$data,
                            nLinear      = nLin,
                            nNonLinear   = nNonLin,
                            mincor       = .01
