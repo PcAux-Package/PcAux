@@ -1,8 +1,8 @@
 ### Title:        Conduct Multiple Imputation with PC Auxiliaries
 ### Author:       Kyle M. Lang
-### Contributors: Steven Chesnut, Pavel Panko
+### Contributors: Steven Chesnut, Pavel Panko, Luke Waggenspack
 ### Created:      2015-SEP-17
-### Modified:     2017-MAY-25
+### Modified:     2020-FEB-23
 ### Purpose:      Use the principal component auxiliaries produced by
 ###               createPcAux() to conduct MI.
 
@@ -52,16 +52,16 @@ miWithPcAux <- function(rawData,
     
     ## Get variable types:
     if(!missCheck(nomVars)) {
-        pcAuxData$nomVars        <- nomVars
-        pcAuxData$dropVars <- pcAuxData$dropVars[!pcAuxData$dropVars[,1] %in% nomVars, ]
+        pcAuxData$nomVars  <- nomVars
+        pcAuxData$dropVars <- setdiff(pcAuxData$dropVars[ , 1], nomVars)
     }
     if(!missCheck(ordVars)) {
-        pcAuxData$ordVars        <- ordVars
-        pcAuxData$dropVars <- pcAuxData$dropVars[!pcAuxData$dropVars[,1] %in% ordVars, ]
+        pcAuxData$ordVars  <- ordVars
+        pcAuxData$dropVars <- setdiff(pcAuxData$dropVars[ , 1], ordVars)
     }
     if(!missCheck(idVars)) {
-        pcAuxData$idVars         <- idVars
-        pcAuxData$dropVars <- pcAuxData$dropVars[!pcAuxData$dropVars[,1] %in% idVars, ]
+        pcAuxData$idVars   <- idVars
+        pcAuxData$dropVars <- setdiff(pcAuxData$dropVars[ , 1], idVars)
     }
     if(length(dropVars) == 1 && dropVars == "useExtant") {
         tmp <- pcAuxData$dropVars[pcAuxData$dropVars[ , 2] == "user_defined", ]
