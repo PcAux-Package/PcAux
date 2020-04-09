@@ -1030,7 +1030,7 @@ PcAuxData$
         {
             "Dummy code nominal factors"
             noms <- colnames(data)[colnames(data) %in%
-                                   setdiff(nomVars, dropVars)]
+                                   setdiff(nomVars, dropVars[, 1])]
             
             ## Store factor representations:
             facNoms           <<- data.frame(data[ , noms])
