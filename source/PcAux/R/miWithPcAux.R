@@ -2,7 +2,7 @@
 ### Author:       Kyle M. Lang
 ### Contributors: Steven Chesnut, Pavel Panko, Luke Waggenspack
 ### Created:      2015-SEP-17
-### Modified:     2020-FEB-23
+### Modified:     2020-APR-09
 ### Purpose:      Use the principal component auxiliaries produced by
 ###               createPcAux() to conduct MI.
 
@@ -53,15 +53,18 @@ miWithPcAux <- function(rawData,
     ## Get variable types:
     if(!missCheck(nomVars)) {
         pcAuxData$nomVars  <- nomVars
-        pcAuxData$dropVars <- setdiff(pcAuxData$dropVars[ , 1], nomVars)
+        removeNoms         <- which(pcAuxData$dropVars[,1] %in% nomVars)
+        pcAuxData$dropVars <- pcAuxData$dropVars[-removeNoms, ]
     }
     if(!missCheck(ordVars)) {
         pcAuxData$ordVars  <- ordVars
-        pcAuxData$dropVars <- setdiff(pcAuxData$dropVars[ , 1], ordVars)
+        removeOrds         <- which(pcAuxData$dropVars[,1] %in% ordVars)
+        pcAuxData$dropVars <- pcAuxData$dropVars[-removeOrds, ]
     }
     if(!missCheck(idVars)) {
         pcAuxData$idVars   <- idVars
-        pcAuxData$dropVars <- setdiff(pcAuxData$dropVars[ , 1], idVars)
+        removeIds         <- which(pcAuxData$dropVars[,1] %in% idVars)
+        pcAuxData$dropVars <- pcAuxData$dropVars[-removeIds, ]
     }
     if(length(dropVars) == 1 && dropVars == "useExtant") {
         tmp <- pcAuxData$dropVars[pcAuxData$dropVars[ , 2] == "user_defined", ]

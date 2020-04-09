@@ -77,7 +77,7 @@ createPcAux <- function(pcAuxData,
     if(pcAuxData$checkStatus == "all") pcAuxData$setStatus("modExt")
     
     ## Re-cast the data if needed
-    if(castData) castData(map = pcAuxData)
+    if(castData | interactType == 1) castData(map = pcAuxData)
 
     pcAuxData$setTime("cast")
     if(pcAuxData$checkStatus == "all") pcAuxData$setStatus("cast")

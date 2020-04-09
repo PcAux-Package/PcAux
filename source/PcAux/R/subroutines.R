@@ -2,7 +2,7 @@
 ### Author:       Kyle M. Lang & Stephen Chesnut
 ### Contributors: Byungkwan Jung, Pavel Panko
 ### Created:      2015-JUL-27
-### Modified:     2018-NOV-29
+### Modified:     2020-APR-09
 
 ##--------------------- COPYRIGHT & LICENSING INFORMATION --------------------##
 ##  Copyright (C) 2018 Kyle M. Lang <k.m.lang@uvt.nl>                         ##
@@ -238,6 +238,10 @@ cleanData <- function(map) {
     creatingPcAux <- length(map$pcAux$lin) == 0 # Are we in createPcAux()?
     
     if(creatingPcAux) {
+        ## Check for factor id columns
+        checkFactors <- sapply(map$idCols, is.factor)
+        if(any(checkFactors))
+            map$idCols[checkFactors] <- lapply(map$idCols[checkFactors], as.character)
         if(length(map$idVars) > 1) {
             ## Check for missing data on ID variables:
             missIdCounts <- switch(as.character(length(map$idVars)),
