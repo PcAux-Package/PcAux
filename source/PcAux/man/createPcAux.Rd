@@ -11,8 +11,8 @@
 \usage{
 createPcAux(pcAuxData,
             nComps,       
-            interactType = 1L,
-            maxPolyPow   = 3L,
+            interactType = 0L,
+            maxPolyPow   = 1L,
             simMode      = FALSE,
             seed         = NULL,
             verbose      = 2L,
