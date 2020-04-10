@@ -1,7 +1,7 @@
 ### Title:    Unit Tests for PcAux
 ### Author:   Kyle M. Lang, Pavel Panko
 ### Created:  2015-NOV-01
-### Modified: 2018-MAY-25
+### Modified: 2020-APR-10
 
 ##--------------------- COPYRIGHT & LICENSING INFORMATION --------------------##
 ##  Copyright (C) 2018 Kyle M. Lang <k.m.lang@uvt.nl>                         ##
@@ -235,6 +235,9 @@ writeStatus(pcAuxData = miOut,
             outName   = "miOutStatus.txt",
             what      = "mi")
 
+## Delete timing informaiton
+## system("rm miOutStatus.txt")
+
 ### getLoggedEvents():
 
 ## Load the data:
@@ -261,6 +264,170 @@ miOut <- miWithPcAux(rawData   = iris2,
                      pcAuxData = pcAuxOut,
                      nImps     = 5)
 
+### Changing mice methods
+
+## Prepare the data:
+cleanData <- prepData(rawData    = iris2,
+                      nomVars    = "Species",
+                      ordVars    = "Petal.Width",
+                      idVars     = "ID",
+                      dropVars   = "Junk",
+                      moderators = "Species")
+
+frozenPrepData1 <- cleanData$copy()
+
+## Create principal component auxiliary variables:
+pcAuxOut <- createPcAux(pcAuxData    = cleanData,
+                        nComps       = c(3, 2),
+                        interactType = 2)
+
+frozenCreateData1 <- pcAuxOut$copy()
+
+## Conduct MI with the pcAux:
+miOut <- miWithPcAux(rawData   = iris2,
+                     pcAuxData = pcAuxOut,
+                     nImps     = 5L)
+
+frozenMiData1 <- miOut$copy()
+
+## Test:   Change 1 method - createPcAux
+## Result: Successful execution
+tmpPrep <- frozenPrepData1$copy()
+pcAuxOut <- createPcAux(pcAuxData    = tmpPrep,
+                        nComps       = c(3, 2),
+                        interactType = 2,
+                        control = list(
+                            miceMethods = list(
+                                continuous = "pmm",
+                                ordinal    = "polr",
+                                nominal    = "polyreg",
+                                binary     = "logreg")
+                        )
+                        )
+
+## Test:   Change all methods - createPcAux
+## Result: Successful execution
+tmpPrep <- frozenPrepData1$copy()
+pcAuxOut <- createPcAux(pcAuxData    = tmpPrep,
+                        nComps       = c(3, 2),
+                        interactType = 2,
+                        control = list(
+                            miceMethods = list(
+                                continuous = "pmm",
+                                ordinal    = "pmm",
+                                nominal    = "pmm",
+                                binary     = "pmm")
+                        )
+                        )
+
+## Test:   Change 1 method - miWithPcAux
+## Result: Successful execution
+tmpCreate <- frozenCreateData1$copy()
+miOut <- miWithPcAux(rawData   = iris2,
+                     pcAuxData = tmpCreate,
+                     nImps     = 5L,
+                     control = list(
+                         miceMethods = list(
+                             continuous = "pmm",
+                             ordinal    = "polr",
+                             nominal    = "polyreg",
+                             binary     = "logreg")
+                     )
+                     )
+
+## Test:   Change all methods - miWithPcAux
+## Result: Successful execution
+tmpCreate <- frozenCreateData1$copy()
+miOut <- miWithPcAux(rawData   = iris2,
+                     pcAuxData = tmpCreate,
+                     nImps     = 5L,
+                     control = list(
+                         miceMethods = list(
+                             continuous = "pmm",
+                             ordinal    = "pmm",
+                             nominal    = "pmm",
+                             binary     = "pmm")
+                     )
+                     )
+
+## Test:   Include 1 incorrect method - createPcAux
+## Result: Fatal error
+tmpPrep <- frozenPrepData1$copy()
+pcAuxOut <- createPcAux(pcAuxData    = tmpPrep,
+                        nComps       = c(3, 2),
+                        interactType = 2,
+                        control = list(
+                            miceMethods = list(
+                                continuous = "hi",
+                                ordinal    = "polr",
+                                nominal    = "polyreg",
+                                binary     = "logreg")
+                        )
+                        )
+
+## Test:   Include all incorrect methods - createPcAux
+## Result: Fatal error
+tmpPrep <- frozenPrepData1$copy()
+pcAuxOut <- createPcAux(pcAuxData    = tmpPrep,
+                        nComps       = c(3, 2),
+                        interactType = 2,
+                        control = list(
+                            miceMethods = list(
+                                continuous = "abc",
+                                ordinal    = "def",
+                                nominal    = "ghi",
+                                binary     = "jkl")
+                        )
+                        )
+
+## Test:   Include 1 incorrect method - createPcAux
+## Result: Fatal error
+tmpCreate <- frozenCreateData1$copy()
+miOut <- miWithPcAux(rawData   = iris2,
+                     pcAuxData = tmpCreate,
+                     nImps     = 5L,
+                     control = list(
+                         miceMethods = list(
+                             continuous = "hi",
+                             ordinal    = "polr",
+                             nominal    = "polyreg",
+                             binary     = "logreg")
+                     )
+                     )
+
+## Test:   Include all incorrect methods - createPcAux
+## Result: Fatal error
+tmpCreate <- frozenCreateData1$copy()
+miOut <- miWithPcAux(rawData   = iris2,
+                     pcAuxData = tmpCreate,
+                     nImps     = 5L,
+                     control = list(
+                         miceMethods = list(
+                             continuous = "abc",
+                             ordinal    = "def",
+                             nominal    = "ghi",
+                             binary     = "jkl")
+                     )
+                     )
+
+### getMiceMethods
+
+## Retrieve mice methods from prepData:
+getMiceMethods(frozenPrepData1)
+
+## Retrieve mice methods from createPcAux:
+getMiceMethods(frozenCreateData1)
+
+## Retrieve mice methods from miWithPcAux:
+getMiceMethods(frozenMiData1)
+
+### getMethVec
+
+## Retrieve mice methods from createPcAux:
+getMethVec(frozenCreateData1)
+
+## Retrieve mice methods from miWithPcAux:
+getMethVec(frozenMiData1)
 
 ##### DATA PREP TESTING #####
 
@@ -456,7 +623,7 @@ pcAuxData <- prepData(rawData    = testData,
 ## Result: Successful execution
 tmp      <- frozenPcAuxData1$copy()
 pcAuxOut <- createPcAux(pcAuxData = tmp,
-                        nComps    = c(5, 3)
+                        nComps    = c(5, 0)
                         )
 frozenPcAuxOut1 <- pcAuxOut$copy()
 
@@ -464,7 +631,7 @@ frozenPcAuxOut1 <- pcAuxOut$copy()
 ## Result: Successful execution
 tmp      <- frozenPcAuxData1$copy()
 pcAuxOut <- createPcAux(pcAuxData = tmp,
-                        nComps    = c(5, 3),
+                        nComps    = c(5, 0),
                         control   = list(pcaMemLev = 1L)
                         )
 
@@ -525,14 +692,16 @@ pcAuxOut <- createPcAux(pcAuxData = tmp,
 tmp      <- frozenPcAuxData1$copy()
 pcAuxOut <- createPcAux(pcAuxData    = tmp,
                         nComps       = c(5, 3),
+                        maxPolyPow   = 2,
                         interactType = 0)
 
 ## Test:   Don't use polynomials
 ## Result: Successful execution
 tmp      <- frozenPcAuxData3$copy()
-pcAuxOut <- createPcAux(pcAuxData  = tmp,
-                        nComps     = c(5, 3),
-                        maxPolyPow = 1)
+pcAuxOut <- createPcAux(pcAuxData    = tmp,
+                        nComps       = c(5, 3),
+                        interactType = 1,
+                        maxPolyPow   = 1)
 
 ## Test:   Only use squares
 ## Result: Successful execution
@@ -572,7 +741,7 @@ pcAuxData <- prepData(rawData    = testData,
                       dropVars   = c("y1", "y2", "z2", "id1", "id2")
                       )
 pcAuxOut <- createPcAux(pcAuxData = pcAuxData,
-                        nComps = c(5, 3)
+                        nComps = c(5, 0)
                         )
 
 ## Test:   Don't specify any dropped variables
@@ -584,7 +753,7 @@ pcAuxData <- prepData(rawData = testData,
                       idVars  = c("id1", "id2")
                       )
 pcAuxOut <- createPcAux(pcAuxData = pcAuxData,
-                        nComps    = c(5, 3)
+                        nComps    = c(5, 0)
                         )
 frozenPcAuxOut5 <- pcAuxOut$copy()
 

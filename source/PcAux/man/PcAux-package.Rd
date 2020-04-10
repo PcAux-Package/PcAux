@@ -34,7 +34,7 @@ cleanData <- prepData(rawData   = iris2,
 
 ## Create principal component auxiliary variables:
 pcAuxOut <- createPcAux(pcAuxData = cleanData,
-                        nComps    = c(3, 2)
+                        nComps    = c(3, 0)
                         )
 
 ## Conduct MI with the pcAux:

@@ -2,7 +2,7 @@
 ### Author:       Kyle M. Lang
 ### Contributors: Steven Chesnut, Pavel Panko, Luke Waggenspack
 ### Created:      2015-SEP-17
-### Modified:     2020-APR-09
+### Modified:     2020-APR-10
 
 ##--------------------- COPYRIGHT & LICENSING INFORMATION --------------------##
 ##  Copyright (C) 2018 Kyle M. Lang <k.m.lang@uvt.nl>                         ##
@@ -51,7 +51,7 @@ createPcAux <- function(pcAuxData,
     
     ## Add elements to an extant instance of the PcAuxData class:
     pcAuxData$nComps   <- nComps
-    pcAuxData$forcePmm <- TRUE # Don't give imputation options other than PMM
+    pcAuxData$forcePmm <- FALSE # Don't give imputation options other than PMM
     pcAuxData$intMeth  <- as.integer(interactType)
     pcAuxData$maxPower <- as.integer(maxPolyPow)
     pcAuxData$simMode  <- simMode

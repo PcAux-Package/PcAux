@@ -1,8 +1,8 @@
 ### Title:        PcAuxData Reference Class Definition
 ### Author:       Kyle M. Lang
-### Contributors: Byungkwan Jung, Vibhuti Gupta, Pavel Panko
+### Contributors: Byungkwan Jung, Vibhuti Gupta, Pavel Panko, Luke Waggenspack
 ### Created:      2015-OCT-30
-### Modified:     2018-AUG-17
+### Modified:     2020-APR-10
 ### Note:         PcAuxData is the metadata class for the PcAux package.
 
 ##--------------------- COPYRIGHT & LICENSING INFORMATION --------------------##
@@ -95,7 +95,8 @@ PcAuxData <-
                     corPairs     = "data.frame",
                     dumVars      = "character",
                     frozenMods   = "character",
-                    loggedEvents = "data.frame"
+                    loggedEvents = "data.frame",
+                    miceMethods  = "list"
                 )# END fields
                 )# END PcAuxData
 
@@ -139,29 +140,35 @@ PcAuxData$
                               useQuickPred = FALSE,
                               minRespCount = as.integer(
                                   floor(0.05 * nrow(data))
+                              ),
+                              miceMethods = list(
+                                  continuous = "norm",
+                                  ordinal    = "polr",
+                                  nominal    = "polyreg",
+                                  binary     = "logreg"
                               )
                               )
         {
             "Initialize an object of class PcAuxData"
 
             ## User-supplied values:
-            data       <<- data[ , setdiff(colnames(data), dropVars)]
-            dropVars   <<- cbind(dropVars, "user_defined")
-            seed       <<- seed
-            nComps     <<- nComps
-            nomVars    <<- nomVars
-            ordVars    <<- ordVars
-            idVars     <<- idVars
-            simMode    <<- simMode
-            verbose    <<- verbose
-            groupVars  <<- groupVars
-            maxPower   <<- maxPower
-            nImps      <<- nImps
-            moderators <<- moderators
-            intMeth    <<- intMeth
-            nProcess   <<- nProcess
-            forcePmm   <<- forcePmm
-            compFormat <<- ""
+            data        <<- data[ , setdiff(colnames(data), dropVars)]
+            dropVars    <<- cbind(dropVars, "user_defined")
+            seed        <<- seed
+            nComps      <<- nComps
+            nomVars     <<- nomVars
+            ordVars     <<- ordVars
+            idVars      <<- idVars
+            simMode     <<- simMode
+            verbose     <<- verbose
+            groupVars   <<- groupVars
+            maxPower    <<- maxPower
+            nImps       <<- nImps
+            moderators  <<- moderators
+            intMeth     <<- intMeth
+            nProcess    <<- nProcess
+            forcePmm    <<- forcePmm
+            compFormat  <<- ""
             
             ## Control list parameters:
             miceIters    <<- miceIters
@@ -177,6 +184,7 @@ PcAuxData$
             nGVarCats    <<- nGVarCats
             checkStatus  <<- checkStatus
             useQuickPred <<- useQuickPred
+            miceMethods  <<- miceMethods
             
             ## Structured fields:
             call <<- list(
@@ -281,7 +289,8 @@ PcAuxData$
                          "collinThresh",
                          "miceRidge",
                          "checkStatus",
-                         "useQuickPred")
+                         "useQuickPred",
+                         "miceMethods")
             
             for(n in names(x)) {
                 if(n %in% nonInts) field(n, x[[n]])
@@ -413,7 +422,8 @@ PcAuxData$
                 conMinLev    = conMinLev,
                 nGVarCats    = nGVarCats,
                 pcaMemLev    = pcaMemLev,
-                checkStatus  = checkStatus
+                checkStatus  = checkStatus,
+                miceMethods  = miceMethods
             )
         },        
         ##-------------- Data Screening and Manipulation Methods -------------##
@@ -741,10 +751,10 @@ PcAuxData$
                     sapply(typeVec[colnames(data)],
                            FUN = function(x) {
                                switch(x,
-                                      continuous = "norm",
-                                      ordinal    = "polr",
-                                      nominal    = "polyreg",
-                                      binary     = "logreg",
+                                      continuous = miceMethods$continuous,
+                                      ordinal    = miceMethods$ordinal,
+                                      nominal    = miceMethods$nominal,
+                                      binary     = miceMethods$binary,
                                       "")
                            }
                            )

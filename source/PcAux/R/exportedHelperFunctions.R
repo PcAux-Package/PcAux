@@ -2,7 +2,7 @@
 ### Author:       Kyle M. Lang
 ### Contributors: Pavel Panko, Vibhuti Gupta
 ### Created:      2015-OCT-29
-### Modified:     2018-AUG-17
+### Modified:     2020-APR-10
 
 ##--------------------- COPYRIGHT & LICENSING INFORMATION --------------------##
 ##  Copyright (C) 2018 Kyle M. Lang <k.m.lang@uvt.nl>                         ##
@@ -279,10 +279,20 @@ writeStatus <- function(pcAuxData, outName, what) {
     paste("Wrote status to", outName)
 }
 
-
+## Retrieve logged events
 getLoggedEvents <- function(pcAuxData) {
     if(!nrow(pcAuxData$loggedEvents))
         return("No logged events")
     else
         return(pcAuxData$loggedEvents)
+}
+
+## Retrieve specified mice methods
+getMiceMethods <- function(pcAuxData) {
+    pcAuxData$miceMethods
+}
+
+## Retrieve method vector
+getMethVec <- function(pcAuxData) {
+    pcAuxData$methVec
 }

@@ -1,8 +1,8 @@
 Package: PcAux
 Type: Package
 Title: PcAux: Automatically extract auxiliary features for simple, principled missing data analysis
-Version: 0.0.0.9014
-Date: 2020-04-09
+Version: 0.0.0.9015
+Date: 2020-04-10
 Author: Kyle M. Lang [aut, crt], Todd D. Little [aut], Steven Chesnut [ctb], Vibhuti Gupta [ctb], Byungkwan Jung [ctb], Pavel Panko [ctb], Luke Waggenspack [ctb]
 Maintainer: Kyle M. Lang <k.m.lang@uvt.nl>
 Description: Implements the ideas of Howard, Rhemtulla, and Little (2015) to execute a principled missing data analysis that uses principal component scores as the auxiliary variables. This package extends and early, unpackaged implementation of these ideas that was written by Dr. Steven Chesnut.

@@ -1,12 +1,13 @@
-### Title:    PcAuxData Simple Accessor and Mutator Definitions
-### Author:   Kyle M. Lang
-### Created:  2015-OCT-30
-### Modified: 2018-MAY-25
-### Note:     These methods are not currently used. The following
-###           definitions are included mostly for "future-proofing,"
-###           so that the PcAuxData class will still be valid if future
-###           implementations of R's Reference Classes require stricter
-###           field access protocols.
+### Title:        PcAuxData Simple Accessor and Mutator Definitions
+### Author:       Kyle M. Lang
+### Contributors: Pavel Panko 
+### Created:      2015-OCT-30
+### Modified:     2018-MAY-25
+### Note:         These methods are not currently used. The following
+###               definitions are included mostly for "future-proofing,"
+###               so that the PcAuxData class will still be valid if future
+###               implementations of R's Reference Classes require stricter
+###               field access protocols.
 
 ##--------------------- COPYRIGHT & LICENSING INFORMATION --------------------##
 ##  Copyright (C) 2018 Kyle M. Lang <k.m.lang@uvt.nl>                         ##

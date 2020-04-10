@@ -9,7 +9,9 @@ export(prepData,
        pcAuxL,
        calcTime,
        writeStatus,
-       getLoggedEvents)
+       getLoggedEvents,
+       getMiceMethods,
+       getMethVec)
 
 import(methods)
 
