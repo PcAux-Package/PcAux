@@ -1,5 +1,16 @@
 # PcAux
+
 ---
+
+## Archive Notice
+
+PcAux development no longer uses this repository. So, the repository has been
+archived.
+
+Below, you can find the original README information for this repository.
+
+---
+
 This is the repository for the PcAux package which was formerly called "quark."
 
 - Licensing information is given in the [LICENSE] file.
