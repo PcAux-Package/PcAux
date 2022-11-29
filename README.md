@@ -5,7 +5,8 @@
 ## Archive Notice
 
 PcAux development no longer uses this repository. So, the repository has been
-archived.
+archived. You can find the new home of PcAux development at
+<https://github.com/Statscamp/PcAux>.
 
 Below, you can find the original README information for this repository.
 
